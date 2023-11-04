@@ -1,0 +1,62 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  api:
+    host: localhost
+    paths: '/ip'
+  users:
+    host: localhost
+    paths: '/api/users'
+  posts:
+    host: localhost
+    paths: '/api/posts'    
+serviceEndpoints:
+  httpbin:
+    url: 'https://httpbin.org'
+  httpusers:
+    url: 'https://jsonplaceholder.typicode.com/users'
+  httpposts:
+    url: 'https://jsonplaceholder.typicode.com/posts'      
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  default:
+    apiEndpoints:
+      - api
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin 
+              changeOrigin: true
+  users:
+    apiEndpoints:
+      - users
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: httpusers 
+              changeOrigin: true
+  posts:
+    apiEndpoints:
+      - posts
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: httpposts 
+              changeOrigin: true                           
